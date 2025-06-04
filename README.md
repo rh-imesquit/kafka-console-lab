@@ -104,13 +104,48 @@ Check if all pods in the kafka namespace are in Running status. Go to the side m
 We’ve completed the Kafka installation part in the OpenShift cluster. Proceed to the next step.
 
 
+### <h2 style="color: #e5b449;">How-to install and configure Red Hat Streams for Apache Kafka Console</h2>
 
+In the left-hand menu, go to Operators > OperatorHub. On the screen that appears, search for Kafka and select the operator Streams for Apache Kafka Console (provided by Red Hat).
 
+An information screen about the operator will be displayed. Click the Install button.
 
+![Kafka pods running](./images/kafka/08%20-%20Installing%20Kafka%20Console%20Operator.png)
 
+In the installation form, keep the default values and click Install again.
+Once the installation is complete, the message "Installed operator: ready to use" will be displayed. Then, click the View Operator button, which will take you to the Operator Details screen.
 
+![Kafka pods running](./images/kafka/09%20-%20Installing%20Kafka%20Console%20Operator.png)
 
+Next, apply the Console resource by running the appropriate command.
 
+```
+$ oc apply -f kafka-topic.yaml
+```
+
+Verify that the resource was created and that the Console tab shows the Ready status.
+
+![Kafka pods running](./images/kafka/10%20-%20Installing%20Console%20resource.png)
+
+After instantiating the resource in the kafka project, a route will be automatically created for the console. To view it, go to the left-hand menu and select Networking > Routes. This route will redirect you to the Kafka Console login screen.
+
+![Kafka pods running](./images/kafka/11%20-%20Getting%20%20console%20route.png)
+
+The credentials are available in a Secret that was automatically generated when the KafkaUser resource was created. Since the user console-user was created to access the console, you can retrieve the password by running the corresponding command.
+
+```
+$ oc get secret console-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+```
+
+Enter the username and password, then click the Access button.
+
+![Kafka pods running](./images/kafka/12%20-%20Apache%20Kafka%20Console%20login%20page.png)
+
+From this point on, you will be connected to the Kafka Console dashboard, which will be explored in more detail in the next steps.
+
+![Kafka pods running](./images/kafka/13%20-%20Apache%20Kafka%20Console%20dashboard.png)
+
+We’ve completed the Kafka Console installation part in the OpenShift cluster. Proceed to the next step.
 
 
 
@@ -132,9 +167,7 @@ We’ve completed the Kafka installation part in the OpenShift cluster. Proceed 
 
 Obter credenciais
 
-```
-$ oc get secret kafka-console-user -n kafka -o jsonpath='{.data.password}' | base64 -d
-```
+
 
 ```
 $ oc get secret app-user -n kafka -o jsonpath='{.data.password}' | base64 -d
