@@ -292,5 +292,5 @@ The idea here was to show that, with the Kafka Console, you no longer need to re
 
 - [Red Hat Streams for Apache Kafka 2.9 Documentation](https://docs.redhat.com/pt-br/documentation/red_hat_streams_for_apache_kafka/2.9)
 - [Red Hat Streams for Apache Kafka Console 2.9 Documentation](https://docs.redhat.com/pt-br/documentation/red_hat_streams_for_apache_kafka/2.9/html/using_the_streams_for_apache_kafka_console/index)
-- [Quarkus Documentation - Using the Infinispan Client](https://quarkus.io/guides/infinispan-client)
+- [Quarkus Documentation - Apache Kafka Reference Guide](https://quarkus.io/guides/kafka)
 
