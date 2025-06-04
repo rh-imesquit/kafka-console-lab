@@ -148,36 +148,125 @@ From this point on, you will be connected to the Kafka Console dashboard, which 
 We’ve completed the Kafka Console installation part in the OpenShift cluster. Proceed to the next step.
 
 
+### <h2 style="color: #e5b449;">How-to deploy producer and consumer applications</h2>
 
+Before getting started, review the applications located in the [apps/](./apps/) directory. We will deploy them through the OpenShift console.
 
+First, let's create the app project using the CLI.
 
+```
+$ oc new-project app
+```
 
+Next, we’ll apply the Secret resource that will store the credentials for the app-user. This secret is located in the [infra/application/](./infra/application/) directory.
 
-
-
-
-
-
-
-
-
-
-
-
-
-Obter credenciais
-
-
+Note that the secret requires the app-user password. You can retrieve it by running the following command:
 
 ```
 $ oc get secret app-user -n kafka -o jsonpath='{.data.password}' | base64 -d
 ```
 
-
+Replace the credential value in the YAML file and apply it.
 
 ```
-$ curl -X POST <ROUTE>/orders   -H "Content-Type: application/json"   -d '{
-    "customerId": "cliente-123",
-    "items": ["item1", "item2", "item3"]
-  }'
+$ oc apply -f kafka-app-user-credentials-secret.yaml -n app
 ```
+
+In the OpenShift console, switch to the Developer perspective in the app project and, in the left-hand menu, go to Add+. Then, select Import from Git in the Git Repository panel.
+
+![Add screen](./images/applications/01%20-%20Add%20screen.png)
+
+In the form, fill in the fields according to the producer application information.
+
+![Producer application import from Git](./images/applications/02%20-%20Producer%20application%20import%20from%20Git.png)
+
+You can use the reference table to assist in creating the application.
+
+| Field             | Value                                             |
+|-------------------|---------------------------------------------------|
+| Git Repo URL      | https://github.com/rh-imesquit/kafka-console-lab  |
+| Context dir       | /apps/webstore-producer                           |
+| Application name  | kafka-console-lab-app                             |
+| Name              | webstore-producer                                 |
+
+In the Deploy section, include the environment variables. To do this, click the Show advanced Deployment options link and fill in the variables as shown below.
+
+![Producer application import from Git](./images/applications/03%20-%20Producer%20application%20import%20from%20Git.png)
+
+| Environment Var             | Value                                                     |
+|-----------------------------|-----------------------------------------------------------|
+| KAFKA_CLUSTER_ENDPOINT      | Obtain it from the kafka-cluster-kafka-bootstrap service  |
+| KAFKA_USER                  | Obtain it from the kafka-app-user-credentials secret.     |
+| KAFKA_PASSWORD              | Obtain it from the kafka-app-user-credentials secret.     |
+
+Finally, click the Create button. This will start the Source-to-Image (S2I) build process in OpenShift, which should be awaited until completion.
+
+Once finished, the producer application pod should have a Running status.
+
+![Producer application import from Git](./images/applications/03%20-%20Producer%20application%20import%20from%20Git.png)
+
+Now, repeat the same process for the consumer application.
+
+| Field             | Value                                             |
+|-------------------|---------------------------------------------------|
+| Git Repo URL      | https://github.com/rh-imesquit/kafka-console-lab  |
+| Context dir       | /apps/webstore-consumer                           |
+| Application name  | kafka-console-lab-app                             |
+| Name              | webstore-consumer                                 |
+
+At environment vars use
+
+| Environment Var             | Value                                                     |
+|-----------------------------|-----------------------------------------------------------|
+| KAFKA_CLUSTER_ENDPOINT      | Obtain it from the kafka-cluster-kafka-bootstrap service  |
+| KAFKA_USER                  | Obtain it from the kafka-app-user-credentials secret.     |
+| KAFKA_PASSWORD              | Obtain it from the kafka-app-user-credentials secret.     |
+
+After filling out the corresponding form, click the Create button again.
+
+When the build process is complete and the pod reaches Running status, both applications will be ready for pub/sub message communication.
+
+On the information screen for the producer application, locate the generated route on the right-hand side and copy the provided URL. We'll use this route to send messages to Kafka.
+
+![Producer and Consumer pods running](./images/applications/04%20-%20Producer%20and%20Consumer%20pods%20running.png)
+
+Run the curl command for the POST /orders endpoint, as shown in the example below:
+
+```
+$ curl -X POST https://webstore-producer-app.apps.cluster-hq65s.hq65s.sandbox3215.opentlc.com/orders \
+-H "Content-Type: application/json" \
+-d '{"customerId": "ianmesquita","items": ["iPhone 15", "Dell laptop 17", "JBL Airpods"]}'
+```
+
+```
+$ curl -X POST https://webstore-producer-app.apps.cluster-hq65s.hq65s.sandbox3215.opentlc.com/orders \
+-H "Content-Type: application/json" \
+-d '{"customerId": "ianmesquita","items": ["LG Monitor", "Logitech Mouse", "JBL Airpods"]}'
+```
+
+![Producer logs](./images/applications/05%20-%20POST%20request.png)
+
+Finally, view the logs of the producer and consumer applications, confirming the message exchange between them.
+
+![Producer logs](./images/applications/06%20-%20Producer%20logs.png)
+
+![Consumer logs](./images/applications/07%20-%20Consumer%20logs.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
