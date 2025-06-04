@@ -110,12 +110,12 @@ In the left-hand menu, go to Operators > OperatorHub. On the screen that appears
 
 An information screen about the operator will be displayed. Click the Install button.
 
-![Kafka pods running](./images/kafka/08%20-%20Installing%20Kafka%20Console%20Operator.png)
+![Installing Kafka Console Operator](./images/kafka/08%20-%20Installing%20Kafka%20Console%20Operator.png)
 
 In the installation form, keep the default values and click Install again.
 Once the installation is complete, the message "Installed operator: ready to use" will be displayed. Then, click the View Operator button, which will take you to the Operator Details screen.
 
-![Kafka pods running](./images/kafka/09%20-%20Installing%20Kafka%20Console%20Operator.png)
+![Installing Kafka Console Operator](./images/kafka/09%20-%20Installing%20Kafka%20Console%20Operator.png)
 
 Next, apply the Console resource by running the appropriate command.
 
@@ -125,11 +125,11 @@ $ oc apply -f kafka-topic.yaml
 
 Verify that the resource was created and that the Console tab shows the Ready status.
 
-![Kafka pods running](./images/kafka/10%20-%20Installing%20Console%20resource.png)
+![Installing Console resource](./images/kafka/10%20-%20Installing%20Console%20resource.png)
 
 After instantiating the resource in the kafka project, a route will be automatically created for the console. To view it, go to the left-hand menu and select Networking > Routes. This route will redirect you to the Kafka Console login screen.
 
-![Kafka pods running](./images/kafka/11%20-%20Getting%20%20console%20route.png)
+![Getting console route](./images/kafka/11%20-%20Getting%20%20console%20route.png)
 
 The credentials are available in a Secret that was automatically generated when the KafkaUser resource was created. Since the user console-user was created to access the console, you can retrieve the password by running the corresponding command.
 
@@ -139,11 +139,11 @@ $ oc get secret console-user -n kafka -o jsonpath='{.data.password}' | base64 -d
 
 Enter the username and password, then click the Access button.
 
-![Kafka pods running](./images/kafka/12%20-%20Apache%20Kafka%20Console%20login%20page.png)
+![Apache Kafka Console login page](./images/kafka/12%20-%20Apache%20Kafka%20Console%20login%20page.png)
 
 From this point on, you will be connected to the Kafka Console dashboard, which will be explored in more detail in the next steps.
 
-![Kafka pods running](./images/kafka/13%20-%20Apache%20Kafka%20Console%20dashboard.png)
+![Apache Kafka Console dashboard](./images/kafka/13%20-%20Apache%20Kafka%20Console%20dashboard.png)
 
 We’ve completed the Kafka Console installation part in the OpenShift cluster. Proceed to the next step.
 
@@ -203,8 +203,6 @@ Finally, click the Create button. This will start the Source-to-Image (S2I) buil
 
 Once finished, the producer application pod should have a Running status.
 
-![Producer application import from Git](./images/applications/03%20-%20Producer%20application%20import%20from%20Git.png)
-
 Now, repeat the same process for the consumer application.
 
 | Field             | Value                                             |
@@ -252,21 +250,47 @@ Finally, view the logs of the producer and consumer applications, confirming the
 
 ![Consumer logs](./images/applications/07%20-%20Consumer%20logs.png)
 
+In the left-hand menu of the Kafka Console, select the Topics option. Access the orders topic to view the data stored in the broker related to this topic.
 
+The **Messages** tab displays a chronological list of messages for a topic.
 
+![Topic message tab](./images/kafka/14%20-%20Topic%20message%20tab.png)
 
+The **Partitions** tab shows list of partitions belonging to a topic. As defined in the kafka-topic.yaml file, there should be 6 partitions and 3 replicas.
 
+![Topic partitions tab](./images/kafka/15%20-%20Topic%20partitions%20tab.png)
 
+The **Consumer Groups** tab displays a list of consumer groups associated with a topic.
 
+![Topic consumer groups tab](./images/kafka/16%20-%20Topic%20consumer%20groups%20tab.png)
 
+The **Configuration** tab presents a list of configuration values for the topic, organized in a key:value format.
 
+![Topic configuration tab](./images/kafka/17-%20Topic%20configuration%20tab.png)
 
+Great job! We have completed our lab.
 
+### <h2 style="color: #e5b449;">Conclusion</h2>
 
+After going through the entire journey of this lab, you are now familiar with the convenience of the Kafka Console within Red Hat Streams for Apache Kafka.
 
+In this lab, you not only installed and configured a Kafka cluster on OpenShift but also explored the tool that greatly simplifies the life of anyone who needs to visualize, monitor, and understand what's happening inside Kafka: the Kafka Console.
 
+You learned how to:
 
+* Install the Kafka Console via Operator
 
+* Access the visual interface and log in securely
 
+* Navigate through topics, messages, partitions, consumer groups, and configurations with just a few clicks
 
+* View, in real time, the message exchange between producer and consumer applications
+
+The idea here was to show that, with the Kafka Console, you no longer need to rely solely on the terminal or depend on logs to understand what's going on in the cluster. With it, it's much easier to investigate, test, and validate applications that use Kafka — all in a visual, intuitive way, directly within OpenShift.
+
+### <h2 style="color: #e5b449;">References</h2>
+
+- [Red Hat Streams for Apache Kafka 2.9 Documentation](https://docs.redhat.com/pt-br/documentation/red_hat_streams_for_apache_kafka/2.9)
+- [Red Hat Streams for Apache Kafka Console 2.9 Documentation](https://docs.redhat.com/pt-br/documentation/red_hat_streams_for_apache_kafka/2.9/html/using_the_streams_for_apache_kafka_console/index)
+- [Quarkus Documentation - Using the Infinispan Client](https://quarkus.io/guides/infinispan-client)
 
